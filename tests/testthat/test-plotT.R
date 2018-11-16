@@ -1,25 +1,29 @@
 context("plotT")
+library(visualTest)
+library(ggplot2)
+data(iris)
+
+# save plots as png image
+png("tests/testthat/test1.png")
+plotT(iris,"Sepal.Length","Sepal.Width")
+dev.off()
+
+png("tests/testthat/test2.png")
+plotT(iris[-c(1:50),],"Sepal.Length","Sepal.Width")
+dev.off()
+
+# get numeric print of graphics
+getFingerprint(file = "tests/testthat/test1.png")
+getFingerprint(file = "tests/testthat/test2.png")
 
 
-test_that("#5 - Test graphics Plot",{
-  devtools::install_github("MangoTheCat/visualTest")
-  library(visualTest)
 
-  png(filename = "img/test1.png")
-  plotT(iris,"Sepal.Length","Sepal.Width")
-  dev.off()
+test_that("#5 - Test similarité des graphics ",{
 
-  png(filename = "img/test2.png")
-  plotT(iris[-c(1:100),],"Sepal.Length","Sepal.Width")
-  dev.off()
 
-  getFingerprint(file = "img/test1.png")
-  getFingerprint(file = "img/test2.png")
-
-  expect_true(
-    isSimilar(file="img/test1.png",
-              fingerprint = getFingerprint(file = "img/test2.png"),
-              threshold = 0.1)
+   expect_true(isSimilar(file="tests/testthat/test1.png", # graphic 1
+              fingerprint = getFingerprint(file = "tests/testthat/test2.png"), # Fingerprint du graphic 2
+              threshold =0.05) # degrée de similarité
   )
 
 })
